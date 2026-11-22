@@ -22,13 +22,13 @@ Claude never sees secrets in plaintext. When an encrypted file has to change, Cl
 |                                                                                        | Read the encrypted file (Read, cat, grep)                                                        |
 | `git diff --stat` / `--name-only`, or any git command with the pathspec `':!*.sops.*'` | Show an encrypted file's content through git (`git diff`, `show`, `log -p`, `blame`, `grep`)     |
 
-A repo can configure a sops `textconv` diff driver; git then decrypts the file into the output. Assume it does.
+A repo can configure a sops `textconv` diff driver; git then decrypts the file into the output. Assume it does. `.sops.yaml` itself matches `*.sops.*` and holds no secrets: diff it with `git diff --no-textconv -- .sops.yaml`, and only that file.
 
 If the project has no `.sops.yaml` and no sops-encrypted file, do not introduce sops and do not send the template. Ask the user where the secret belongs. The value stays out of the chat either way.
 
 ## Template example for .env in German
 
-A project `CLAUDE.md` overrides the template's language, file paths and follow-up step. It does not override the forbidden list.
+Write the template in the language the user writes in; the German below shows the format, not the language. A project `CLAUDE.md` overrides the template's language, file paths and follow-up step. It does not override the forbidden list.
 
 ```markdown
 ### 🔐 Secret-Änderung für dich
@@ -44,8 +44,8 @@ A project `CLAUDE.md` overrides the template's language, file paths and follow-u
 **Ausführen – in einem eigenen Terminal, nicht mit `!` in Claude Code:**
 `sops <pfad/zur/datei.sops.env>` – der Editor öffnet sich, Einträge wie oben setzen
 
-**Prüfen (zeigt nur Schlüsselnamen, darf mit `!` laufen):**
-`sops -d --output-type json <datei> | jq -r 'paths(scalars) | map(tostring) | join(".")'`
+**Prüfen (zeigt je Schlüssel nur `set` oder `empty`, darf mit `!` laufen):**
+`sops -d --output-type json <datei> | jq -r 'paths(type != "object" and type != "array") as $p | "\($p | map(tostring) | join("."))\t\(getpath($p) | if . == null or . == "" then "empty" else "set" end)"'`
 
 **Danach:** <nächster Schritt, z. B. `just secrets`>. Sag mir nur „erledigt“, keine Werte posten.
 ```
@@ -60,7 +60,9 @@ A removed recipient has still seen the old values; list the keys the user should
 
 ## Verification command
 
-Use the `jq` command from the template for every file format; it prints key paths and nothing else, and prints only a parse error when the input is not what it expects. Never hand out a line-based filter (`cut`, `grep`, `awk`, `sed`, `head`) on decrypted output: `cut -d= -f1` prints every line without a `=` unchanged, so on YAML or JSON it shows the values.
+Use the `jq` command from the template for every file format and for every question about the file's content. It prints one line per key path with `set` or `empty`, never a value, and only a parse error when the input is not what it expects. That answers both "does the key exist" and "is it empty"; do not write a variant of it.
+
+Never hand out a line-based filter (`cut`, `grep`, `awk`, `sed`, `head`) on decrypted output: `cut -d= -f1` prints every line without a `=` unchanged, so on YAML or JSON it shows the values.
 
 ## Example
 

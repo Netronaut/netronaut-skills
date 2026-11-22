@@ -40,12 +40,12 @@ A project `CLAUDE.md` overrides this skill: issue language, board name and numbe
 
 Every write has exactly one level. An action not listed takes the level of the closest row; if none is close, it is Go.
 
-| Level          | Meaning                                                                        |
-| -------------- | ------------------------------------------------------------------------------ |
-| **Text**       | The user approves the exact text in a preview. Only "Passt" unlocks the write. |
-| **Go**         | A yes/no question in the question UI. No text to approve.                      |
-| **Free**       | No question. Do it and report it in one line.                                  |
-| **On request** | Only when the user asks for it explicitly.                                     |
+| Level          | Meaning                                                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Text**       | The user approves the exact text in a preview. Only "Passt" unlocks the write.                                                                   |
+| **Go**         | One question in the question UI: yes/no, or a choice between alternatives. Each option's description states its consequence. No text to approve. |
+| **Free**       | No question. Do it and report it in one line.                                                                                                    |
+| **On request** | Only when the user asks for it explicitly.                                                                                                       |
 
 | Action                                           | Level      | When / note                                      |
 | ------------------------------------------------ | ---------- | ------------------------------------------------ |
@@ -63,14 +63,18 @@ Every write has exactly one level. An action not listed takes the level of the c
 | Backlog → Todo                                   | Free       | Only when every readiness rule holds             |
 | Blocked-by / blocking relationships              | Free       | Report the issue numbers                         |
 | Create the story branch                          | Free       | Part of starting a story                         |
-| Story from Backlog when Todo is empty            | Go         |                                                  |
+| Story from Backlog when Todo is empty            | Go         | Offer only startable stories                     |
 | Story of a third epic "In Progress"              | Go         |                                                  |
-| Third story "In Progress"                        | Go         |                                                  |
+| Story beyond the story limit "In Progress"       | Go         |                                                  |
 | Sub-issue order and board order                  | Go         | Propose the order once as a list                 |
 | Move a story to another epic                     | Go         |                                                  |
 | Close or fold stale items (weekly review)        | Go         | One list, one question                           |
 | Commit, push, open a PR                          | On request |                                                  |
 | Delete a branch                                  | On request |                                                  |
+
+- A waiver in the chat ("just create it", "no need to show me") does not lift Text. Say so in one line and show the text once. Only a project `CLAUDE.md` changes a level.
+- When one action trips several Go rows, ask one question that names all of them.
+- A Go never makes a story ready. A story with an open choice gets the choice asked first; a story with an open blocker cannot start until the blocker is closed or the user removes the relationship. List such stories in the question with what they lack, not as options.
 
 Asking for Text:
 
@@ -104,7 +108,7 @@ gh project item-edit --project-id "$pid" --id "$item" --field-id "$status_field"
 
 - The board description holds one line of focus: what the coming weeks pay into.
 - At most two epics are "In Progress"; the epic status marks focus.
-- At most two stories are "In Progress" at a time.
+- Story limit: at most ⌈n/2⌉ + 1 stories are "In Progress" on the board, where n is the number of programmers named in the project `CLAUDE.md` (default 1, so two stories). Count every story, whoever is assigned.
 - Detailed issues only for the next four to six weeks. Further ideas stay one line in the epic or the roadmap doc until they come close.
 - Todo holds only ready stories: template complete, no open choice or `@todo`, dependencies closed, fits in one PR. Anything else stays in Backlog.
 - Weekly review, on request: check Todo against these rules, order Backlog by epic, attach orphans, close or fold into one line what has not moved for 30 days.
@@ -127,7 +131,7 @@ A review team can prepare a larger epic the same way as a story; its findings fe
 
 Always follow the priority. "The next story" is the top Todo item of the board's current order (`gh project item-list N --owner ORG --format json --limit 200`), checked against the epic's sub-issue order. Re-read both every time; the user reorders between turns, so an order from earlier in the session is stale.
 
-On "next", take the top Todo item. The cases that need a go first are in the approval matrix.
+On "next", first look at the stories already "In Progress" and assigned to the user. One without an open PR is the next story: resume it, with no board change. Otherwise take the top Todo item. The cases that need a go first are in the approval matrix.
 
 1. Close out the previous story first: tick its finished `Aufgaben` items, even when its PR already closed the issue.
 2. Read the story's comments; a comment that changes scope goes into the body first.
@@ -164,6 +168,7 @@ Verify alarming findings against evidence (git history, existing config, the liv
 | Thought                                                        | Reality                                                                         |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | "The text is obvious, I'll create the issue and show it after" | Draft in the question UI first. Always.                                         |
+| "The user said not to show it first"                           | A waiver does not lift Text. One line, then the preview.                        |
 | "The question text explains it, no preview needed"             | Asking about GitHub text without a preview on the option is not asking. Add it. |
 | "I'll add the commands to `Aufgaben` so it's complete"         | Milestones only. Minimal details go to `## Hinweise`, steps to the PR.          |
 | "This runbook is useful, I'll put it in `docs/`"               | One-off → PR description. `docs/` is permanent only.                            |
