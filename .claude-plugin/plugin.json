@@ -1,0 +1,12 @@
+{
+  "name": "netronaut-skills",
+  "description": "Skills for AI agents used in development at Netronaut: GitHub project flow and sops secret hand-off.",
+  "author": {
+    "name": "Netronaut",
+    "url": "https://github.com/Netronaut"
+  },
+  "homepage": "https://github.com/Netronaut/netronaut-skills",
+  "repository": "https://github.com/Netronaut/netronaut-skills",
+  "license": "EUPL-1.2",
+  "keywords": ["skills", "github", "project-management", "sops", "secrets"]
+}
