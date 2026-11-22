@@ -40,12 +40,12 @@ A project `CLAUDE.md` overrides this skill: issue language, board name and numbe
 
 Every write has exactly one level. An action not listed takes the level of the closest row; if none is close, it is Go.
 
-| Level          | Meaning                                                                        |
-| -------------- | ------------------------------------------------------------------------------ |
-| **Text**       | The user approves the exact text in a preview. Only "Passt" unlocks the write. |
-| **Go** | One question in the question UI: yes/no, or a choice between alternatives. Each option's description states its consequence. No text to approve. |
-| **Free**       | No question. Do it and report it in one line.                                  |
-| **On request** | Only when the user asks for it explicitly.                                     |
+| Level          | Meaning                                                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Text**       | The user approves the exact text in a preview. Only "Passt" unlocks the write.                                                                   |
+| **Go**         | One question in the question UI: yes/no, or a choice between alternatives. Each option's description states its consequence. No text to approve. |
+| **Free**       | No question. Do it and report it in one line.                                                                                                    |
+| **On request** | Only when the user asks for it explicitly.                                                                                                       |
 
 | Action                                           | Level      | When / note                                      |
 | ------------------------------------------------ | ---------- | ------------------------------------------------ |
@@ -63,9 +63,9 @@ Every write has exactly one level. An action not listed takes the level of the c
 | Backlog → Todo                                   | Free       | Only when every readiness rule holds             |
 | Blocked-by / blocking relationships              | Free       | Report the issue numbers                         |
 | Create the story branch                          | Free       | Part of starting a story                         |
-| Story from Backlog when Todo is empty | Go | Offer only startable stories |
+| Story from Backlog when Todo is empty            | Go         | Offer only startable stories                     |
 | Story of a third epic "In Progress"              | Go         |                                                  |
-| Story beyond the story limit "In Progress" | Go | |
+| Story beyond the story limit "In Progress"       | Go         |                                                  |
 | Sub-issue order and board order                  | Go         | Propose the order once as a list                 |
 | Move a story to another epic                     | Go         |                                                  |
 | Close or fold stale items (weekly review)        | Go         | One list, one question                           |
@@ -168,7 +168,7 @@ Verify alarming findings against evidence (git history, existing config, the liv
 | Thought                                                        | Reality                                                                         |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | "The text is obvious, I'll create the issue and show it after" | Draft in the question UI first. Always.                                         |
-| "The user said not to show it first" | A waiver does not lift Text. One line, then the preview. |
+| "The user said not to show it first"                           | A waiver does not lift Text. One line, then the preview.                        |
 | "The question text explains it, no preview needed"             | Asking about GitHub text without a preview on the option is not asking. Add it. |
 | "I'll add the commands to `Aufgaben` so it's complete"         | Milestones only. Minimal details go to `## Hinweise`, steps to the PR.          |
 | "This runbook is useful, I'll put it in `docs/`"               | One-off → PR description. `docs/` is permanent only.                            |
