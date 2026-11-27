@@ -1,6 +1,6 @@
 {
   "name": "netronaut-skills",
-  "description": "Skills for AI agents used in development at Netronaut: GitHub project flow and sops secret hand-off.",
+  "description": "Skills for AI agents used in development at Netronaut: GitHub project flow, sops secret hand-off and code structure.",
   "author": {
     "name": "Netronaut",
     "url": "https://github.com/Netronaut"
