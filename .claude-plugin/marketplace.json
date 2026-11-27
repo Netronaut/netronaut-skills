@@ -9,7 +9,7 @@
     {
       "name": "netronaut-skills",
       "source": "./",
-      "description": "GitHub project flow and sops secret hand-off."
+      "description": "GitHub project flow, sops secret hand-off and code structure."
     }
   ]
 }
