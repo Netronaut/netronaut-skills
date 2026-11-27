@@ -159,7 +159,8 @@ await requestRun({ runRepo: new RunRepository() })(step);
 - Every `if`, `for` and `while` has braces.
 - Guard clauses with an early return replace `else` and nested conditions.
 - A multi-line block is separated from the statements around it by one blank line. No blank line directly after an opening brace or before a closing one.
-- No nested ternary. In JSX, move the choice into a function or a lookup object above the `return`.
+- No nested ternary. In JSX, move the choice into a component or a lookup object.
+- A function that returns JSX is a component: `<ConnectionAlert events={events} />`, not `{connectionAlert(events)}` or an inner `content()`. It takes what it reads as props.
 - In a file, constants and lookup objects come first, then the exported function, then the helpers it calls.
 - A function takes at most three parameters, then an options object. Signatures a framework dictates are exempt.
 - A function takes no boolean parameter that selects its path. Write two functions: `formatDate` and `formatDateTime`.
