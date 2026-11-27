@@ -1,6 +1,6 @@
-# netronaut-skills
+# Netronaut Skills
 
-Skills for AI agents used in development at [Netronaut](https://netronaut.de).
+These are skills for AI agents used in our development here at [Netronaut](https://netronaut.de).
 
 | Skill                                                        | What it does                                                                                                                                                                                                                                           |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
